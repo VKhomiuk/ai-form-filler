@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Form Filler
+
+A smart product creation form that uses **Claude AI** to auto-fill product details for an e-commerce web shop. Enter a product name and let AI generate descriptions, pricing, specs, and more.
+
+## Features
+
+- **AI Auto-fill** — type a product name, click "Auto-fill with AI", and Claude fills all fields
+- **Structured output** — uses Zod schema + AI SDK `generateObject` for reliable JSON responses
+- **13 product fields** — name, description, category, brand, price, SKU, weight, dimensions, material, color, tags, and more
+- **Smart context** — preserves already-filled fields and asks Claude to keep them
+- **Form validation** — Zod + react-hook-form for type-safe validation
+- **Loading states** — spinner feedback while AI is working
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- An [Anthropic API key](https://console.anthropic.com/)
+
+### Installation
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Create a `.env.local` file in the project root:
+
+```
+ANTHROPIC_API_KEY=your_key_here
+```
+
+3. Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/
+│   ├── api/fill-form/route.ts    # POST endpoint — Claude generates product data
+│   ├── globals.css                # Tailwind v4 theme variables
+│   ├── layout.tsx                 # Root layout with Geist font
+│   └── page.tsx                   # Main page with ProductForm
+├── components/
+│   ├── product-form.tsx           # Product form with AI auto-fill button
+│   └── ui/
+│       ├── button.tsx             # Button component (CVA variants)
+│       ├── card.tsx               # Card layout components
+│       ├── input.tsx              # Input component
+│       ├── label.tsx              # Label component (Radix)
+│       └── textarea.tsx           # Textarea component
+└── lib/
+    ├── product-schema.ts          # Zod schema + field definitions
+    └── utils.ts                   # cn() helper
+```
 
-## Learn More
+## How It Works
 
-To learn more about Next.js, take a look at the following resources:
+1. User enters a product name (e.g. "iPhone 16 Pro Max")
+2. Clicks **"Auto-fill with AI"**
+3. The app sends the name + any pre-filled fields to `/api/fill-form`
+4. Claude generates structured product data using `generateObject` with a Zod schema
+5. The form fields are populated with the AI response
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Environment Variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `ANTHROPIC_API_KEY` | Yes | Your Anthropic API key |
 
-## Deploy on Vercel
+## Tech Stack
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Next.js 16** — App Router, TypeScript
+- **Vercel AI SDK** — `generateObject` with structured output
+- **Claude Sonnet 4.6** — Anthropic's latest model
+- **Tailwind CSS v4** — styling
+- **react-hook-form** + **Zod** — form handling and validation
+- **Radix UI** — accessible primitives
+- **lucide-react** — icons
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+
+MIT
